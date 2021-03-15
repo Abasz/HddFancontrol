@@ -1,0 +1,22 @@
+{
+    "generalSettings": {
+        "interval": 10,
+        "devPath": "./bin/Debug/net5.0/"
+    },
+    "pwmSettings": [
+        {
+            "minTemp": 29,
+            "maxTemp": 43,
+            "minStart": 48,
+            "minPwm": 0,
+            "maxPwm": 255
+        },
+        {
+            "minTemp": 29,
+            "maxTemp": 43,
+            "minStart": 30,
+            "minPwm": 0,
+            "maxPwm": 255
+        }
+    ]
+}

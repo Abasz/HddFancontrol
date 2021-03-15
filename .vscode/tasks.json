@@ -1,0 +1,76 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/HddFancontrol.ConsoleApp/HddFancontrol.ConsoleApp.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "${workspaceFolder}/src/HddFancontrol.ConsoleApp/HddFancontrol.ConsoleApp.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "coverage report",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "test",
+                "${workspaceFolder}/tests/HddFancontrol.ConsoleApp.Tests/HddFancontrol.ConsoleApp.Tests.csproj",
+                "/p:CollectCoverage=true",
+                "/p:CoverletOutputFormat=lcov",
+                "/p:CoverletOutput=./../../src/HddFancontrol.ConsoleApp/lcov"
+            ],
+            "group": "test",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "install",
+            "command": "./install.sh",
+            "type": "shell",
+            "args": ["-s", "hdd-fancontrol"],
+            "group": "build",
+            "dependsOn": ["publish"],
+            "dependsOrder": "sequence",
+            "problemMatcher": ["$msCompile"]
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/src/HddFancontrol.ConsoleApp/HddFancontrol.ConsoleApp.csproj",
+                "/property:GenerateFullPaths=true",
+                "/property:Configuration=Release",
+                "/property:PublishSingleFile=true",
+                "/property:SelfContained=true",
+                "/property:RuntimeIdentifier=linux-x64",
+                "/property:PublishTrimmed=true",
+                "/property:PublishReadyToRun=true",
+                "/property:PublishReadyToRunShowWarnings=true",
+                "/property:PublishDir=${workspaceFolder}/dist/",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
