@@ -153,6 +153,16 @@ namespace HddFancontrol.ConsoleApp.Tests
                     new List<KeyValuePair<string, string>>()
                     {
                         new KeyValuePair<string, string>("List:0:MaxTemp", "10"),
+                            new KeyValuePair<string, string>("List:0:MinTemp", "11"),
+                            new KeyValuePair<string, string>("List:1:MaxTemp", "20")
+                    }
+            };
+            yield return new object[]
+            {
+                new List<PwmSettings>(),
+                    new List<KeyValuePair<string, string>>()
+                    {
+                        new KeyValuePair<string, string>("List:0:MaxTemp", "10"),
                             new KeyValuePair<string, string>("List:0:MinTemp", "1"),
                             new KeyValuePair<string, string>("List:1:MaxTemp", "20")
                     }

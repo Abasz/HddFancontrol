@@ -16,26 +16,25 @@ namespace HddFancontrol.ConsoleApp.Models
 
     public class PwmSettings
     {
-        // extra cross property validation for (e.g. max should be higher than min)
-
-        // min should be lower than max
         [Range(0, int.MaxValue, ErrorMessage = "Required to be greater than 0")]
+        [ShouldBeLessThan(nameof(MaxTemp))]
         public int MinTemp { get; set; } = -1;
 
-        // max should be higher than min
         [Range(0, int.MaxValue, ErrorMessage = "Required to be greater than 0")]
+        [ShouldBeGreaterThan(nameof(MinTemp))]
         public int MaxTemp { get; set; } = -1;
 
-        // minStart should be higher than minPwm
         [Range(1, int.MaxValue, ErrorMessage = "Required to be greater than 1")]
+        [ShouldBeLessThan(nameof(MaxPwm))]
+        [ShouldBeGreaterThan(nameof(MinPwm))]
         public int MinStart { get; set; } = -1;
 
-        // min should be lower than max
         [Range(0, 255, ErrorMessage = "Required to be between 0 and 255")]
+        [ShouldBeLessThan(nameof(MaxPwm))]
         public int MinPwm { get; set; } = -1;
 
-        // max should be higher than min
         [Range(0, 255, ErrorMessage = "Required to be between 0 and 255")]
+        [ShouldBeGreaterThan(nameof(MinPwm))]
         public int MaxPwm { get; set; } = -1;
     }
 }
