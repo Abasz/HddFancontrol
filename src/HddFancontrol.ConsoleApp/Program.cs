@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using HddFancontrol.ConsoleApp.Libs.ServiceExtentions;
@@ -16,7 +17,14 @@ namespace HddFancontrol.ConsoleApp
     {
         public static async Task Main(string[] args)
         {
-            await CreateHostBuilder(args).Build().RunAsync();
+            try
+            {
+                await CreateHostBuilder(args).Build().RunAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
