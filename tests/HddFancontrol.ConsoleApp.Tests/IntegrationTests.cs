@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
+using HddFancontrol.ConsoleApp.Libs.ServiceExtentions;
 using HddFancontrol.ConsoleApp.Services.Interfaces;
 
 using Microsoft.Extensions.Configuration;
@@ -52,7 +54,8 @@ namespace HddFancontrol.ConsoleApp.Tests
                         configApp.Sources.Clear();
                         configApp.AddInMemoryCollection(_settings);
                     }
-                ).ConfigureServices((hostContext, services) =>
+                )
+                .ConfigureServices((hostContext, services) =>
                 {
                     services.AddTransient(p => _mockPwmManager.Object);
                     services.AddScoped(p => _mockHddFancontrolApplication.Object);
@@ -148,6 +151,102 @@ namespace HddFancontrol.ConsoleApp.Tests
                     null,
                     It.IsAny<Func<It.IsAnyType, Exception, string>>()
                 ), Times.Once);
+        }
+
+        [Fact(DisplayName = "Should set logging file directory according to appsettings")]
+        public async void AppShouldSetLogDirectoryBasedOnSettings()
+        {
+            var logDirName = "CustomLogsDirectory";
+            if (Directory.Exists(logDirName))
+                Directory.Delete(logDirName, true);
+
+            var ct = new CancellationTokenSource(2000);
+            var app = _hostBuilder
+                .UseCustomSerilog()
+                .ConfigureAppConfiguration(
+                    (hostContext, configApp) =>
+                    {
+                        _settings.Add(new KeyValuePair<string, string>("Serilog:LogDirectory", logDirName));
+                        _settings.Add(new KeyValuePair<string, string>("Serilog:MinimumLevel:Default", "Debug"));
+                        configApp.Sources.Clear();
+                        configApp.AddInMemoryCollection(_settings);
+                    }
+                )
+                .Build();
+
+            var runningApp = app.RunAsync(ct.Token);
+            ct.Cancel();
+            await runningApp;
+
+            Assert.True(Directory.Exists(logDirName));
+
+            Directory.Delete(logDirName, true);
+        }
+
+        [Fact(DisplayName = "Should set logging file directory to default if no settings in  appsettings")]
+        public async void AppShouldSetLogDirectoryToDefault()
+        {
+            if (Directory.Exists("Logs"))
+                Directory.Delete("Logs", true);
+
+            var ct = new CancellationTokenSource(2000);
+            var app = _hostBuilder
+                .UseCustomSerilog()
+                .ConfigureAppConfiguration(
+                    (hostContext, configApp) =>
+                    {
+                        _settings.Add(new KeyValuePair<string, string>("Serilog:MinimumLevel:Default", "Debug"));
+                        configApp.Sources.Clear();
+                        configApp.AddInMemoryCollection(_settings);
+                    }
+                )
+                .Build();
+
+            var runningApp = app.RunAsync(ct.Token);
+            ct.Cancel();
+            await runningApp;
+
+            Assert.True(Directory.Exists("Logs"));
+
+            Directory.Delete("Logs", true);
+        }
+
+        [Fact(DisplayName = "Should rotate the log file if exceeds limit")]
+        public async void AppShouldRotateLogWhenExceedingLimit()
+        {
+            if (Directory.Exists("Logs"))
+                Directory.Delete("Logs", true);
+
+            await File.WriteAllBytesAsync($"{Directory.CreateDirectory("Logs").FullName}/hdd-fancontrol.log", new byte[2_000_000]);
+
+            var ct = new CancellationTokenSource(2000);
+            var app = _hostBuilder
+                .UseCustomSerilog()
+                .ConfigureAppConfiguration(
+                    (hostContext, configApp) =>
+                    {
+                        _settings.Add(new KeyValuePair<string, string>("Serilog:MinimumLevel:Default", "Debug"));
+                        configApp.Sources.Clear();
+                        configApp.AddInMemoryCollection(_settings);
+                    }
+                )
+                .Build();
+
+            var runningApp = app.RunAsync(ct.Token);
+            ct.Cancel();
+            await runningApp;
+
+            Assert.Collection(Directory.GetFiles("Logs"),
+                fileName =>
+                {
+                    Assert.Contains("hdd-fancontrol", fileName);
+                },
+                fileName =>
+                {
+                    Assert.Contains("hdd-fancontrol", fileName);
+                });
+
+            Directory.Delete("Logs", true);
         }
     }
 }

@@ -30,14 +30,16 @@ namespace HddFancontrol.ConsoleApp.Tests
             Assert.Empty(validationErrors);
         }
 
-        [Fact]
-        public void ShouldBeInvalid()
+        [Theory]
+        [InlineData(10, 0)]
+        [InlineData(10, 10)]
+        public void ShouldBeInvalid(int smaller, int higher)
         {
             var validationErrors = new List<ValidationResult>();
             var sut = new ShouldBeGreaterThanTestModel
             {
-                Higher = 0,
-                Smaller = 10
+                Higher = higher,
+                Smaller = smaller
             };
 
             var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);

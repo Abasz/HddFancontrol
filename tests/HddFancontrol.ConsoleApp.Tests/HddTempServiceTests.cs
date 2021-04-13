@@ -45,7 +45,10 @@ namespace HddFancontrol.ConsoleApp.Tests
         {
             var temps = await _hddTempService.GetAllHddTempsAsync();
 
-            Assert.True(temps.Any());
+            Assert.NotEmpty(temps);
+            var lastTemp = temps.ElementAt(temps.Count() - 1);
+            var firstTemp = temps.ElementAt(0);
+            Assert.True(firstTemp >= lastTemp, $"Invalid order {firstTemp} is less than {lastTemp}");
         }
     }
 }
