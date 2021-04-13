@@ -1,0 +1,20 @@
+{
+    "stryker-config": {
+        "mutate": [
+            "!**/HelperMethods.cs",
+            "!**/Models.cs"
+        ],
+        "reporters": [
+            "progress",
+            "html"
+        ],
+        "ignore-methods": [
+            "*Log*",
+            "ToString",
+            "*HashCode*",
+            "*Exception.ctor"
+        ],
+        "coverage-analysis": "perTest",
+        "solution-path": "HddFancontrol.sln"
+    }
+}
