@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 using HddFancontrol.ConsoleApp.Models;
@@ -95,7 +96,7 @@ namespace HddFancontrol.ConsoleApp.Tests
                 ), Times.Once);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Should set max pwm when application exits")]
         public async void ShouldSetMaxPwmOnExit()
         {
             await _startup.StartAsync(CancellationToken.None);
@@ -112,12 +113,14 @@ namespace HddFancontrol.ConsoleApp.Tests
             });
         }
 
-        [Fact]
+        [Fact(DisplayName = "Should log validation errors on invalid settings and exit application")]
         public async void ShouldLogValidationErrorsOnInvalidSettingsAndExit()
         {
+            var errorMessageKey = "DevPath";
+            var errorMessageValue = "Path is required";
             var exception = new OptionsValidationException("GeneralSettings", typeof(GeneralSettings), new List<string>()
             {
-                "DevPath|Path is required"
+                $"{errorMessageKey}|{errorMessageValue}"
             });
             _mockHddFancontrolApplication
                 .Setup(x => x.RunAsync())
@@ -130,14 +133,14 @@ namespace HddFancontrol.ConsoleApp.Tests
                 x.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, _) => x!.ToString() !.Contains("Settings validation error in")),
+                    It.Is<It.IsAnyType>((x, _) => Regex.IsMatch(x!.ToString(), $@"^Settings validation error in {exception.OptionsName}:")),
                     null,
                     It.IsAny<Func<It.IsAnyType, Exception, string>>()
                 ), Times.Once);
             _mockAppLifetime.Verify(x => x.StopApplication());
         }
 
-        [Fact]
+        [Fact(DisplayName = "Should log error and shutdown application on unhandled exception")]
         public async void ShouldLogErrorAndShutdownOnUnhandledException()
         {
             var exception = new Exception("Test exception");
