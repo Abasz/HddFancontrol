@@ -1,37 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+namespace HddFancontrol.Libs.ValidationRules;
 
-namespace HddFancontrol.Libs.ValidationRules
+public class ShouldBeLessThanAttribute : ValidationAttribute
 {
-    public class ShouldBeLessThanAttribute : ValidationAttribute
+    private readonly string _comparisonProperty;
+
+    public ShouldBeLessThanAttribute(string comparisonProperty) : base()
     {
-        private readonly string _comparisonProperty;
+        _comparisonProperty = comparisonProperty;
+    }
 
-        public ShouldBeLessThanAttribute(string comparisonProperty) : base()
-        {
-            _comparisonProperty = comparisonProperty;
-        }
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+    {
+        var property = validationContext.ObjectType.GetProperty(_comparisonProperty);
 
-        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
-        {
-            var property = validationContext.ObjectType.GetProperty(_comparisonProperty);
+        if (property is null)
+            throw new ArgumentException($"Property with name ${_comparisonProperty} was not found");
 
-            if (property is null)
-                throw new ArgumentException($"Property with name ${_comparisonProperty} was not found");
+        var comparisonValue = property.GetValue(validationContext.ObjectInstance);
 
-            var comparisonValue = property.GetValue(validationContext.ObjectInstance);
+        if (comparisonValue is null || value is null)
+            return ValidationResult.Success;
 
-            if (comparisonValue is null || value is null)
-                return ValidationResult.Success;
+        if ((int)value < (int)comparisonValue)
+            return ValidationResult.Success;
 
-            if ((int)value < (int)comparisonValue)
-                return ValidationResult.Success;
+        if (ErrorMessage is null)
+            ErrorMessage = $"Value should be less than {_comparisonProperty}";
 
-            if (ErrorMessage is null)
-                ErrorMessage = $"Value should be less than {_comparisonProperty}";
-
-            return new ValidationResult("", new List<string>() { validationContext.DisplayName });
-        }
+        return new ValidationResult("", new List<string>() { validationContext.DisplayName });
     }
 }

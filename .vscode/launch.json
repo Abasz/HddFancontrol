@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/HddFancontrol.ConsoleApp/bin/Debug/net5.0/HddFancontrol.ConsoleApp.dll",
+            "program": "${workspaceFolder}/src/HddFancontrol.ConsoleApp/bin/Debug/net6.0/HddFancontrol.ConsoleApp.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/HddFancontrol.ConsoleApp",
             "console": "internalConsole",

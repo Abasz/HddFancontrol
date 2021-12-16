@@ -1,11 +1,7 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
+namespace HddFancontrol.ConsoleApp.Services.Interfaces;
 
-namespace HddFancontrol.ConsoleApp.Services.Interfaces
+public interface IHddTempService
 {
-    public interface IHddTempService
-    {
-        Task<IEnumerable<int>> GetAllHddTempsAsync();
-        Task<int?> GetHddTempAsync(string diskPath);
-    }
+    Task<IEnumerable<int>> GetAllHddTempsAsync();
+    Task<int?> GetHddTempAsync(string diskPath);
 }

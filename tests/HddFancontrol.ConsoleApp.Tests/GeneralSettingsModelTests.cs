@@ -1,88 +1,79 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+namespace HddFancontrol.ConsoleApp.Tests;
 
-using HddFancontrol.ConsoleApp.Models;
-
-using Xunit;
-
-namespace HddFancontrol.ConsoleApp.Tests
+public class GeneralSettingsModelTests
 {
-    public class GeneralSettingsModelTests
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(0)]
+    public void ShouldHaveInvalidIntervalRange(int interval)
     {
-        [Theory]
-        [InlineData(-1)]
-        [InlineData(0)]
-        public void ShouldHaveInvalidIntervalRange(int interval)
+        var validationErrors = new List<ValidationResult>();
+        var sut = new GeneralSettings
         {
-            var validationErrors = new List<ValidationResult>();
-            var sut = new GeneralSettings
-            {
-                Interval = interval,
-                DevPath = "./"
-            };
+            Interval = interval,
+            DevPath = "./"
+        };
 
-            var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
+        var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
 
-            Assert.False(isValid);
-            Assert.True(validationErrors.Any());
-        }
+        Assert.False(isValid);
+        Assert.True(validationErrors.Any());
+    }
 
-        [Theory]
-        [InlineData(10)]
-        public void ShouldHaveValidIntervalRange(int interval)
+    [Theory]
+    [InlineData(10)]
+    public void ShouldHaveValidIntervalRange(int interval)
+    {
+        var validationErrors = new List<ValidationResult>();
+        var sut = new GeneralSettings
         {
-            var validationErrors = new List<ValidationResult>();
-            var sut = new GeneralSettings
-            {
-                Interval = interval,
-                DevPath = "./"
-            };
+            Interval = interval,
+            DevPath = "./"
+        };
 
-            var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
+        var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
 
-            Assert.True(isValid);
-            Assert.False(validationErrors.Any());
-        }
+        Assert.True(isValid);
+        Assert.False(validationErrors.Any());
+    }
 
-        [Theory]
-        [InlineData(null, "required")]
-        [InlineData("", "required")]
-        [InlineData("./not/valid/path", "Directory")]
-        public void ShouldHaveInvalidDevPath(string devPath, string errorMessage)
+    [Theory]
+    [InlineData(null, "required")]
+    [InlineData("", "required")]
+    [InlineData("./not/valid/path", "Directory")]
+    public void ShouldHaveInvalidDevPath(string devPath, string errorMessage)
+    {
+        var validationErrors = new List<ValidationResult>();
+        var sut = new GeneralSettings
         {
-            var validationErrors = new List<ValidationResult>();
-            var sut = new GeneralSettings
-            {
-                Interval = 10,
-                DevPath = devPath
-            };
+            Interval = 10,
+            DevPath = devPath
+        };
 
-            var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
+        var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
 
-            Assert.False(isValid);
-            Assert.Collection(validationErrors, error =>
-            {
-                Assert.Contains(errorMessage, error.ErrorMessage);
-            });
-        }
-
-        [Theory]
-        [InlineData("./")]
-        [InlineData("/var/")]
-        [InlineData("/var")]
-        public void ShouldHaveValidDevPath(string devPath)
+        Assert.False(isValid);
+        Assert.Collection(validationErrors, error =>
         {
-            var validationErrors = new List<ValidationResult>();
-            var sut = new GeneralSettings
-            {
-                Interval = 10,
-                DevPath = devPath
-            };
+            Assert.Contains(errorMessage, error.ErrorMessage);
+        });
+    }
 
-            var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
+    [Theory]
+    [InlineData("./")]
+    [InlineData("/var/")]
+    [InlineData("/var")]
+    public void ShouldHaveValidDevPath(string devPath)
+    {
+        var validationErrors = new List<ValidationResult>();
+        var sut = new GeneralSettings
+        {
+            Interval = 10,
+            DevPath = devPath
+        };
 
-            Assert.True(isValid);
-        }
+        var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
+
+        Assert.True(isValid);
     }
 }

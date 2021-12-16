@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <!-- <PublishSingleFile>true</PublishSingleFile> -->
         <!-- <SelfContained>true</SelfContained> -->
         <!-- <RuntimeIdentifier>linux-x64</RuntimeIdentifier> -->
@@ -9,19 +9,27 @@
         <PublishReadyToRun>true</PublishReadyToRun>
         <PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings> -->
         <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Serilog.Sinks.File" Version="4.1.0"/>
-        <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0"/>
-        <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0"/>
-        <PackageReference Include="Serilog.Sinks.Async" Version="1.4.0"/>
-        <PackageReference Include="Serilog.AspNetCore" Version="3.4.0"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="5.0.1"/>
+        <PackageReference Include="Serilog.Sinks.Async" Version="1.4.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="5.0.1" />
     </ItemGroup>
+    <ItemGroup>
+        <Using Include="System.ComponentModel.DataAnnotations"/>
 
+        <Using Include="Microsoft.Extensions.DependencyInjection"/>
+        <Using Include="Microsoft.Extensions.Hosting"/>
+        <Using Include="Microsoft.Extensions.Logging"/>
+        <Using Include="Microsoft.Extensions.Options"/>
+
+        <Using Include="HddFancontrol.ConsoleApp.Libs"/>
+        <Using Include="HddFancontrol.ConsoleApp.Models"/>
+        <Using Include="HddFancontrol.ConsoleApp.Services.Interfaces"/>
+    </ItemGroup>
     <ItemGroup>
         <Content Include="appsettings.json">
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
