@@ -5,13 +5,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="coverlet.msbuild" Version="3.0.3">
+        <PackageReference Include="coverlet.msbuild" Version="3.1.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-        <PackageReference Include="xunit" Version="2.4.1" />
-        <PackageReference Include="Moq" Version="4.16.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0"/>
+        <PackageReference Include="xunit" Version="2.4.1"/>
+        <PackageReference Include="Moq" Version="4.16.1"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
@@ -20,23 +20,19 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <ProjectReference Include="../../src/HddFancontrol.ConsoleApp/HddFancontrol.ConsoleApp.csproj" />
+        <ProjectReference Include="../../src/HddFancontrol.ConsoleApp/HddFancontrol.ConsoleApp.csproj"/>
     </ItemGroup>
     <ItemGroup>
         <Using Include="System.ComponentModel.DataAnnotations"/>
         <Using Include="System.Text.RegularExpressions"/>
-
         <Using Include="Microsoft.Extensions.Configuration"/>
         <Using Include="Microsoft.Extensions.DependencyInjection"/>
         <Using Include="Microsoft.Extensions.Hosting"/>
         <Using Include="Microsoft.Extensions.Logging"/>
         <Using Include="Microsoft.Extensions.Logging.Abstractions"/>
         <Using Include="Microsoft.Extensions.Options"/>
-
         <Using Include="Moq"/>
-
         <Using Include="Xunit"/>
-
         <Using Include="HddFancontrol.ConsoleApp.Services.Classes"/>
         <Using Include="HddFancontrol.ConsoleApp.Models"/>
         <Using Include="HddFancontrol.ConsoleApp.Services.Interfaces"/>
