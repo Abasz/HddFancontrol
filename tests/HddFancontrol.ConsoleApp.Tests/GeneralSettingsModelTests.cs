@@ -17,7 +17,7 @@ public class GeneralSettingsModelTests
         var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
 
         Assert.False(isValid);
-        Assert.True(validationErrors.Any());
+        Assert.True(validationErrors.Count != 0);
     }
 
     [Theory]
@@ -34,7 +34,7 @@ public class GeneralSettingsModelTests
         var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
 
         Assert.True(isValid);
-        Assert.False(validationErrors.Any());
+        Assert.False(validationErrors.Count != 0);
     }
 
     [Theory]

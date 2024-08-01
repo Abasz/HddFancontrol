@@ -10,11 +10,11 @@ public class OptionsBuilderValidationExtensionsTests
 
     public OptionsBuilderValidationExtensionsTests()
     {
-        _settings = new List<KeyValuePair<string, string>>()
-        {
+        _settings =
+        [
             new KeyValuePair<string, string>("interval", "10"),
             new KeyValuePair<string, string>("devPath", "./")
-        };
+        ];
 
         _services = new ServiceCollection();
         _configurationBuilder = new ConfigurationBuilder();
@@ -35,10 +35,10 @@ public class OptionsBuilderValidationExtensionsTests
     [Fact]
     public void ShouldThrowValidationError()
     {
-        _settings = new List<KeyValuePair<string, string>>()
-        {
+        _settings =
+        [
             new KeyValuePair<string, string>("interval", "10"),
-        };
+        ];
         _services.AddOptions<GeneralSettings>()
             .Bind(_configurationBuilder.AddInMemoryCollection(_settings).Build())
             .ValidateConfiguration();
@@ -52,7 +52,7 @@ public class OptionsBuilderValidationExtensionsTests
 
     [Theory]
     [MemberData(nameof(TestNonEmptySettings))]
-    public void ShouldSetCorrectOptionsNameInValidationError<T>(T settingsType, List<KeyValuePair<string, string>> settings)where T : class
+    public void ShouldSetCorrectOptionsNameInValidationError<T>(T settingsType, List<KeyValuePair<string, string>> settings) where T : class
     {
         _services.AddOptions<T>()
             .Bind(_configurationBuilder.AddInMemoryCollection(settings).Build())
@@ -73,7 +73,7 @@ public class OptionsBuilderValidationExtensionsTests
 
     [Theory]
     [MemberData(nameof(TestNonEmptySettings))]
-    public void ShouldSetCorrectErrorMessageInValidationError<T>(T settingsType, List<KeyValuePair<string, string>> settings)where T : class
+    public void ShouldSetCorrectErrorMessageInValidationError<T>(T settingsType, List<KeyValuePair<string, string>> settings) where T : class
     {
         _services.AddOptions<T>()
             .Bind(_configurationBuilder.AddInMemoryCollection(settings).Build())
@@ -97,7 +97,7 @@ public class OptionsBuilderValidationExtensionsTests
 
     [Theory]
     [MemberData(nameof(TestEmptyEnumerableSettings))]
-    public void ShouldSetCorrectErrorMessageWhenEnumerableConfigIsEmpty<T>(T settingsType, List<KeyValuePair<string, string>> settings)where T : class
+    public void ShouldSetCorrectErrorMessageWhenEnumerableConfigIsEmpty<T>(T settingsType, List<KeyValuePair<string, string>> settings) where T : class
     {
         _services.AddOptions<T>()
             .Bind(_configurationBuilder.AddInMemoryCollection(settings).Build())
@@ -122,29 +122,23 @@ public class OptionsBuilderValidationExtensionsTests
     {
         yield return new object[]
         {
-            new GeneralSettings(),
+            new GeneralSettings{
+                DevPath = "devPath"
+            },
                 new List<KeyValuePair<string, string>>()
                 {
-                    new KeyValuePair<string, string>("Interval", "10")
+                    new("Interval", "10")
                 }
         };
         yield return new object[]
         {
-            new GeneralSettings(),
+            new GeneralSettings{
+                DevPath = "devPath"
+            },
                 new List<KeyValuePair<string, string>>()
                 {
-                    new KeyValuePair<string, string>("Interval", "10"),
-                        new KeyValuePair<string, string>("DevPath", "/path/should/not/exist")
-                }
-        };
-        yield return new object[]
-        {
-            new List<PwmSettings>(),
-                new List<KeyValuePair<string, string>>()
-                {
-                    new KeyValuePair<string, string>("List:0:MaxTemp", "10"),
-                        new KeyValuePair<string, string>("List:0:MinTemp", "11"),
-                        new KeyValuePair<string, string>("List:1:MaxTemp", "20")
+                    new("Interval", "10"),
+                        new("DevPath", "/path/should/not/exist")
                 }
         };
         yield return new object[]
@@ -152,9 +146,19 @@ public class OptionsBuilderValidationExtensionsTests
             new List<PwmSettings>(),
                 new List<KeyValuePair<string, string>>()
                 {
-                    new KeyValuePair<string, string>("List:0:MaxTemp", "10"),
-                        new KeyValuePair<string, string>("List:0:MinTemp", "1"),
-                        new KeyValuePair<string, string>("List:1:MaxTemp", "20")
+                    new("List:0:MaxTemp", "10"),
+                        new("List:0:MinTemp", "11"),
+                        new("List:1:MaxTemp", "20")
+                }
+        };
+        yield return new object[]
+        {
+            new List<PwmSettings>(),
+                new List<KeyValuePair<string, string>>()
+                {
+                    new("List:0:MaxTemp", "10"),
+                        new("List:0:MinTemp", "1"),
+                        new("List:1:MaxTemp", "20")
                 }
         };
     }

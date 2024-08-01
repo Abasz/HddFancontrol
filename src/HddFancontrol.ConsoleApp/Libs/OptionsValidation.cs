@@ -4,7 +4,7 @@ namespace HddFancontrol.ConsoleApp.Libs.ServiceExtentions;
 
 public static class OptionsBuilderValidationExtensions
 {
-    public static OptionsBuilder<TOptions> ValidateConfiguration<TOptions>(this OptionsBuilder<TOptions> optionsBuilder)where TOptions : class
+    public static OptionsBuilder<TOptions> ValidateConfiguration<TOptions>(this OptionsBuilder<TOptions> optionsBuilder) where TOptions : class
     {
         optionsBuilder.PostConfigure(x =>
         {
@@ -16,10 +16,9 @@ public static class OptionsBuilderValidationExtensions
                 if (!optionList.Cast<object>().Any())
                     validationResults.Add(
                         new ValidationResult("No settings were added",
-                            new List<string>()
-                            {
+                            [
                                 "List"
-                            })
+                            ])
                     );
             }
             else
@@ -39,7 +38,7 @@ public static class OptionsBuilderValidationExtensions
         return optionsBuilder;
     }
 
-    private static List<ValidationResult> ValidateOptions<TOptions>(TOptions x)where TOptions : class
+    private static List<ValidationResult> ValidateOptions<TOptions>(TOptions x) where TOptions : class
     {
         var validationResults = new List<ValidationResult>();
         var context = new ValidationContext(x);

@@ -9,7 +9,7 @@ public class GeneralSettings
 
     [Required(ErrorMessage = "Path is required")]
     [DirectoryExists(ErrorMessage = "Directory does not exist")]
-    public string DevPath { get; set; } = null!;
+    public required string DevPath { get; set; }
 }
 
 public class PwmSettings

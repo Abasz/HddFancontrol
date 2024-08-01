@@ -16,14 +16,14 @@ public static class HelperMethods
         var process = new Process()
         {
             EnableRaisingEvents = true,
-            StartInfo = new ProcessStartInfo
+            StartInfo = new()
             {
-            FileName = Path.Combine("/", "bin", "bash"),
-            Arguments = $"-c \"{escapedArgs} 2>&1\"",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
+                FileName = Path.Combine("/", "bin", "bash"),
+                Arguments = $"-c \"{escapedArgs} 2>&1\"",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
             }
         };
 
@@ -46,14 +46,14 @@ public static class HelperMethods
         var process = new Process()
         {
             EnableRaisingEvents = true,
-            StartInfo = new ProcessStartInfo
+            StartInfo = new()
             {
-            FileName = Path.Combine("/", "bin", "bash"),
-            Arguments = $"-c \"{escapedArgs} 2>&1\"",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
+                FileName = Path.Combine("/", "bin", "bash"),
+                Arguments = $"-c \"{escapedArgs} 2>&1\"",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
             }
         };
         process.OutputDataReceived += cmdOutputEventHandler;
@@ -77,7 +77,7 @@ public static class HelperMethods
     {
         if (!string.IsNullOrEmpty(str) && str.Length > 1)
         {
-            return Char.ToLowerInvariant(str[0]) + str[1..];
+            return char.ToLowerInvariant(str[0]) + str[1..];
         }
         return str;
     }

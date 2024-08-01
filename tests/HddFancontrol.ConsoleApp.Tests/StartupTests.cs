@@ -15,9 +15,7 @@ public class StartupTests
 
     public StartupTests()
     {
-        _mockPwmSettings = new()
-        { { new PwmSettings() }, { new PwmSettings() }
-        };
+        _mockPwmSettings = [new PwmSettings(), new PwmSettings()];
         _mockGeneralSettings = new()
         {
             DevPath = "./",
@@ -53,7 +51,7 @@ public class StartupTests
     }
 
     [Fact]
-    public async void ShouldStopInvokingHDDApplicationRunMethodOnCancellation()
+    public async Task ShouldStopInvokingHDDApplicationRunMethodOnCancellation()
     {
         var ct = new CancellationTokenSource();
         ct.Cancel();
@@ -63,7 +61,7 @@ public class StartupTests
     }
 
     [Fact]
-    public async void ShouldCallHDDApplicationRunMethodPeriodically()
+    public async Task ShouldCallHDDApplicationRunMethodPeriodically()
     {
         await _startup.StartAsync(CancellationToken.None);
         await _startup.StopAsync(CancellationToken.None);
@@ -73,14 +71,14 @@ public class StartupTests
             x.Log(
                 LogLevel.Debug,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((x, _) => x!.ToString() !.Contains($"Waiting {_mockGeneralSettings.Interval} seconds")),
+                It.Is<It.IsAnyType>((x, _) => x!.ToString()!.Contains($"Waiting {_mockGeneralSettings.Interval} seconds")),
                 null,
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()
             ), Times.Once);
     }
 
     [Fact(DisplayName = "Should set max pwm when application exits")]
-    public async void ShouldSetMaxPwmOnExit()
+    public async Task ShouldSetMaxPwmOnExit()
     {
         await _startup.StartAsync(CancellationToken.None);
         await _startup.StopAsync(CancellationToken.None);
@@ -97,14 +95,14 @@ public class StartupTests
     }
 
     [Fact(DisplayName = "Should log validation errors on invalid settings and exit application")]
-    public async void ShouldLogValidationErrorsOnInvalidSettingsAndExit()
+    public async Task ShouldLogValidationErrorsOnInvalidSettingsAndExit()
     {
         var errorMessageKey = "DevPath";
         var errorMessageValue = "Path is required";
-        var exception = new OptionsValidationException("GeneralSettings", typeof(GeneralSettings), new List<string>()
-        {
+        var exception = new OptionsValidationException("GeneralSettings", typeof(GeneralSettings),
+        [
             $"{errorMessageKey}|{errorMessageValue}"
-        });
+        ]);
         _mockHddFancontrolApplication
             .Setup(x => x.RunAsync())
             .ThrowsAsync(exception);
@@ -124,7 +122,7 @@ public class StartupTests
     }
 
     [Fact(DisplayName = "Should log error and shutdown application on unhandled exception")]
-    public async void ShouldLogErrorAndShutdownOnUnhandledException()
+    public async Task ShouldLogErrorAndShutdownOnUnhandledException()
     {
         var exception = new Exception("Test exception");
         _mockHddFancontrolApplication

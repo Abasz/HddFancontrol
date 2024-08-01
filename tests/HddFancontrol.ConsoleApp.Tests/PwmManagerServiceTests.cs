@@ -4,8 +4,8 @@ public class PwmManagerServiceTests
 {
     private readonly Mock<IOptionsSnapshot<GeneralSettings>> _mockGeneralSettingsOptions;
     private readonly Mock<IOptionsSnapshot<List<PwmSettings>>> _mockPwmSettingsOptions;
-    private readonly List<PwmSettings> _pwmSettings = new()
-    {
+    private readonly List<PwmSettings> _pwmSettings =
+    [
         new PwmSettings
         {
         MinTemp = 37,
@@ -14,7 +14,7 @@ public class PwmManagerServiceTests
         MinPwm = 0,
         MaxPwm = 255
         }
-    };
+    ];
 
     public PwmManagerServiceTests()
     {
@@ -22,7 +22,7 @@ public class PwmManagerServiceTests
         _mockGeneralSettingsOptions.Setup(m => m.Value).Returns(new GeneralSettings
         {
             DevPath = "./",
-                Interval = 10
+            Interval = 10
         });
 
         _mockPwmSettingsOptions = new Mock<IOptionsSnapshot<List<PwmSettings>>>();
@@ -30,12 +30,12 @@ public class PwmManagerServiceTests
     }
 
     [Fact]
-    public async void ShouldGetCurrentPwms()
+    public async Task ShouldGetCurrentPwms()
     {
         _mockGeneralSettingsOptions.Setup(m => m.Value).Returns(new GeneralSettings
         {
             DevPath = "/sys/class/hwmon/hwmon1/",
-                Interval = 10
+            Interval = 10
         });
 
         var pwmManagerService = new PwmManagerService(new NullLogger<PwmManagerService>(), _mockGeneralSettingsOptions.Object, _mockPwmSettingsOptions.Object);
@@ -46,7 +46,7 @@ public class PwmManagerServiceTests
     }
 
     [Fact]
-    public async void ShouldUpdatePwm()
+    public async Task ShouldUpdatePwm()
     {
         var pwmManagerService = new PwmManagerService(new NullLogger<PwmManagerService>(), _mockGeneralSettingsOptions.Object, _mockPwmSettingsOptions.Object);
 

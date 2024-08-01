@@ -10,7 +10,7 @@ public class HddTempServiceTests
     }
 
     [Fact]
-    public async void ShouldGetHddTempForSpecificDrive()
+    public async Task ShouldGetHddTempForSpecificDrive()
     {
         var temp = await _hddTempService.GetHddTempAsync("/dev/sda");
 
@@ -18,7 +18,7 @@ public class HddTempServiceTests
     }
 
     [Fact]
-    public async void ShouldReturnNullWhenTempIsNotAvailableForSpecificDrive()
+    public async Task ShouldReturnNullWhenTempIsNotAvailableForSpecificDrive()
     {
         var temp = await _hddTempService.GetHddTempAsync("/dev/sdf");
 
@@ -26,13 +26,13 @@ public class HddTempServiceTests
     }
 
     [Fact]
-    public async void ShouldThrowArgumentExceptionWhenDrivePathIsInvalid()
+    public async Task ShouldThrowArgumentExceptionWhenDrivePathIsInvalid()
     {
         await Assert.ThrowsAsync<ArgumentException>(() => _hddTempService.GetHddTempAsync("/invalid/path"));
     }
 
     [Fact]
-    public async void ShouldGetTempForAllDrivesWhereAvailable()
+    public async Task ShouldGetTempForAllDrivesWhereAvailable()
     {
         var temps = await _hddTempService.GetAllHddTempsAsync();
 

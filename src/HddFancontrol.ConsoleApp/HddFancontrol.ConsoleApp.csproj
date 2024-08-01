@@ -1,27 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Minimum</AnalysisMode>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0"/>
-    <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0"/>
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
-    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0"/>
-    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="6.0.0"/>
+    <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.2" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="2.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Using Include="System.ComponentModel.DataAnnotations"/>
-    <Using Include="Microsoft.Extensions.DependencyInjection"/>
-    <Using Include="Microsoft.Extensions.Hosting"/>
-    <Using Include="Microsoft.Extensions.Logging"/>
-    <Using Include="Microsoft.Extensions.Options"/>
-    <Using Include="HddFancontrol.ConsoleApp.Libs"/>
-    <Using Include="HddFancontrol.ConsoleApp.Models"/>
-    <Using Include="HddFancontrol.ConsoleApp.Services.Interfaces"/>
+    <Using Include="System.ComponentModel.DataAnnotations" />
+    <Using Include="Microsoft.Extensions.DependencyInjection" />
+    <Using Include="Microsoft.Extensions.Hosting" />
+    <Using Include="Microsoft.Extensions.Logging" />
+    <Using Include="Microsoft.Extensions.Options" />
+    <Using Include="HddFancontrol.ConsoleApp.Libs" />
+    <Using Include="HddFancontrol.ConsoleApp.Models" />
+    <Using Include="HddFancontrol.ConsoleApp.Services.Interfaces" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.json">

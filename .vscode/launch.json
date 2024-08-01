@@ -9,12 +9,14 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/HddFancontrol.ConsoleApp/bin/Debug/net6.0/HddFancontrol.ConsoleApp.dll",
+            "program": "${workspaceFolder}/src/HddFancontrol.ConsoleApp/bin/Debug/net8.0/HddFancontrol.ConsoleApp.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/HddFancontrol.ConsoleApp",
             "console": "internalConsole",
             "stopAtEntry": false,
-            "env": { "DOTNET_ENVIRONMENT": "Development" }
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            }
         },
         {
             "name": ".NET Core Attach",

@@ -15,7 +15,7 @@ public class HddFancontrolApplicationTests
     }
 
     [Fact]
-    public async void ShouldThrowInvalidOperationExceptionWhenNoHddTempAvailable()
+    public async Task ShouldThrowInvalidOperationExceptionWhenNoHddTempAvailable()
     {
         _mockHddTempService
             .Setup(x => x.GetAllHddTempsAsync())
@@ -27,7 +27,7 @@ public class HddFancontrolApplicationTests
     }
 
     [Fact]
-    public async void ShouldCalculatePwmBasedOnHighestTemp()
+    public async Task ShouldCalculatePwmBasedOnHighestTemp()
     {
         var temps = Enumerable.Range(30, 3).OrderByDescending(x => x);
         _mockHddTempService
@@ -40,7 +40,7 @@ public class HddFancontrolApplicationTests
     }
 
     [Fact]
-    public async void ShouldUpdateAllPwmFiles()
+    public async Task ShouldUpdateAllPwmFiles()
     {
         var temps = Enumerable.Range(30, 3).OrderByDescending(x => x);
         _mockHddTempService

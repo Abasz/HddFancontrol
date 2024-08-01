@@ -1,45 +1,30 @@
 namespace HddFancontrol.ConsoleApp;
 
-public class Startup : BackgroundService
+public class Startup(ILogger<Startup> logger, IServiceProvider services, IHostApplicationLifetime app, IOptionsMonitor<GeneralSettings> generalSettings, IOptionsMonitor<List<PwmSettings>> pwmSettings) : BackgroundService
 {
-    private readonly IServiceProvider _services;
-    private readonly IHostApplicationLifetime _app;
-    private readonly IOptionsMonitor<GeneralSettings> _generalSettings;
-    private readonly IOptionsMonitor<List<PwmSettings>> _pwmSettings;
-    private readonly ILogger<Startup> _logger;
-
-    public Startup(ILogger<Startup> logger, IServiceProvider services, IHostApplicationLifetime app, IOptionsMonitor<GeneralSettings> generalSettings, IOptionsMonitor<List<PwmSettings>> pwmSettings)
-    {
-        _logger = logger;
-        _services = services;
-        _app = app;
-        _generalSettings = generalSettings;
-        _pwmSettings = pwmSettings;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Starting HDD Fancontrol service");
+        logger.LogInformation("Starting HDD Fancontrol service");
         try
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogDebug("Starting check run");
+                logger.LogDebug("Starting check run");
 
-                using var scope = _services.CreateScope();
+                using var scope = services.CreateScope();
 
                 await scope.ServiceProvider
                     .GetRequiredService<IHddFancontrolApplication>()
                     .RunAsync();
 
-                var interval = _generalSettings.CurrentValue.Interval;
-                _logger.LogDebug("Waiting {Interval} seconds", interval);
+                var interval = generalSettings.CurrentValue.Interval;
+                logger.LogDebug("Waiting {Interval} seconds", interval);
                 await Task.Delay(TimeSpan.FromSeconds(interval), stoppingToken);
             }
         }
         catch (TaskCanceledException)
         {
-            _logger.LogInformation("Stopping HDD Fancontrol service and setting pwm(s) to full speed");
+            logger.LogInformation("Stopping HDD Fancontrol service and setting pwm(s) to full speed");
 
             await SetMaxPwmAsync();
         }
@@ -57,28 +42,28 @@ public class Startup : BackgroundService
                 };
             });
 
-            _logger.LogError("Settings validation error in {Property}: {@ValidationErrors}", e.OptionsName, validationErrors);
+            logger.LogError("Settings validation error in {Property}: {@ValidationErrors}", e.OptionsName, validationErrors);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "An unhandled exception occurred, setting pwm(s) to full speed");
+            logger.LogError(e, "An unhandled exception occurred, setting pwm(s) to full speed");
             await SetMaxPwmAsync();
         }
         finally
         {
-            _app.StopApplication();
+            app.StopApplication();
         }
     }
 
     private async Task SetMaxPwmAsync()
     {
-        var scope = _services.CreateScope();
+        var scope = services.CreateScope();
         var pwmManagerService =
             scope.ServiceProvider
             .GetRequiredService<IPwmManagerService>();
 
         await Task.WhenAll(
-            _pwmSettings.CurrentValue.Select(
+            pwmSettings.CurrentValue.Select(
                 (pwm, index) => pwmManagerService.UpdatePwmFileAsync(pwm.MaxPwm, $"pwm{index + 1}")
             )
         );

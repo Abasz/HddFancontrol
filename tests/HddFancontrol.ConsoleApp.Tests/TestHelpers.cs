@@ -4,8 +4,7 @@ public static class TestHelpers
 {
     public static IServiceCollection AddMockLogging(this IServiceCollection services, Mock<ILogger> mockLogger = null)
     {
-        if (mockLogger is null)
-            mockLogger = new Mock<ILogger>();
+        mockLogger ??= new Mock<ILogger>();
 
         var loggerFactory = new Mock<ILoggerFactory>();
 

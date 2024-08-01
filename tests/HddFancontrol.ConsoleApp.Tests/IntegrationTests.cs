@@ -1,7 +1,3 @@
-using HddFancontrol.ConsoleApp.Libs.ServiceExtentions;
-
-using Microsoft.Extensions.Configuration;
-
 namespace HddFancontrol.ConsoleApp.Tests;
 
 public class IntegrationTests
@@ -11,8 +7,7 @@ public class IntegrationTests
     private readonly Mock<ILogger> _mockLogger;
     private readonly IHostBuilder _hostBuilder;
     private readonly List<KeyValuePair<string, string>> _settings =
-        new()
-        {
+        [
             new KeyValuePair<string, string>("generalSettings:Interval", "11"),
             new KeyValuePair<string, string>("generalSettings:DevPath", "./"),
             new KeyValuePair<string, string>("pwmSettings:0:MinTemp", "29"),
@@ -25,7 +20,7 @@ public class IntegrationTests
             new KeyValuePair<string, string>("pwmSettings:1:MinStart", "30"),
             new KeyValuePair<string, string>("pwmSettings:1:MinPwm", "0"),
             new KeyValuePair<string, string>("pwmSettings:1:MaxPwm", "255")
-        };
+        ];
 
     public IntegrationTests()
     {
@@ -51,7 +46,7 @@ public class IntegrationTests
     }
 
     [Fact]
-    public async void AppShouldStart()
+    public async Task AppShouldStart()
     {
         var ct = new CancellationTokenSource(2000);
         var app = _hostBuilder.Build();
@@ -65,14 +60,14 @@ public class IntegrationTests
             x.Log(
                 LogLevel.Debug,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((x, _) => x!.ToString() !.Contains("Hosting started")),
+                It.Is<It.IsAnyType>((x, _) => x!.ToString()!.Contains("Hosting started")),
                 null,
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()
             ), Times.Once);
     }
 
     [Fact]
-    public async void AppShouldStopAndSetMaxPwmWhenGracefullShutdown()
+    public async Task AppShouldStopAndSetMaxPwmWhenGracefullShutdown()
     {
         var ct = new CancellationTokenSource(2000);
         var app = _hostBuilder.Build();
@@ -86,14 +81,14 @@ public class IntegrationTests
             x.Log(
                 LogLevel.Debug,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((x, _) => x!.ToString() !.Contains("Hosting stopped")),
+                It.Is<It.IsAnyType>((x, _) => x!.ToString()!.Contains("Hosting stopped")),
                 null,
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()
             ), Times.Once);
     }
 
     [Fact]
-    public async void AppShouldShutdownWithSettingMaxPwmWhenUnhandledException()
+    public async Task AppShouldShutdownWithSettingMaxPwmWhenUnhandledException()
     {
         var app = _hostBuilder.Build();
         _mockHddFancontrolApplication.Setup(x => x.RunAsync()).ThrowsAsync(new Exception("Test unhandled exception"));
@@ -106,14 +101,14 @@ public class IntegrationTests
             x.Log(
                 LogLevel.Debug,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((x, _) => x!.ToString() !.Contains("Hosting stopped")),
+                It.Is<It.IsAnyType>((x, _) => x!.ToString()!.Contains("Hosting stopped")),
                 null,
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()
             ), Times.Once);
     }
 
     [Fact]
-    public async void AppShouldShutdownWithoutSettingMaxPwmWhenInvalidSettings()
+    public async Task AppShouldShutdownWithoutSettingMaxPwmWhenInvalidSettings()
     {
         _settings[0] = new KeyValuePair<string, string>("generalSettings:Interval", "0");
         var app = _hostBuilder.Build();
@@ -126,7 +121,7 @@ public class IntegrationTests
             x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((x, _) => x!.ToString() !.Contains("Settings validation error in")),
+                It.Is<It.IsAnyType>((x, _) => x!.ToString()!.Contains("Settings validation error in")),
                 null,
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()
             ), Times.Once);
@@ -134,14 +129,14 @@ public class IntegrationTests
             x.Log(
                 LogLevel.Debug,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((x, _) => x!.ToString() !.Contains("Hosting stopped")),
+                It.Is<It.IsAnyType>((x, _) => x!.ToString()!.Contains("Hosting stopped")),
                 null,
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()
             ), Times.Once);
     }
 
     [Fact(DisplayName = "Should set logging file directory according to appsettings")]
-    public async void AppShouldSetLogDirectoryBasedOnSettings()
+    public async Task AppShouldSetLogDirectoryBasedOnSettings()
     {
         var logDirName = "CustomLogsDirectory";
         if (Directory.Exists(logDirName))
@@ -171,7 +166,7 @@ public class IntegrationTests
     }
 
     [Fact(DisplayName = "Should set logging file directory to default if no settings in  appsettings")]
-    public async void AppShouldSetLogDirectoryToDefault()
+    public async Task AppShouldSetLogDirectoryToDefault()
     {
         if (Directory.Exists("Logs"))
             Directory.Delete("Logs", true);
@@ -199,7 +194,7 @@ public class IntegrationTests
     }
 
     [Fact(DisplayName = "Should rotate the log file if exceeds limit")]
-    public async void AppShouldRotateLogWhenExceedingLimit()
+    public async Task AppShouldRotateLogWhenExceedingLimit()
     {
         if (Directory.Exists("Logs"))
             Directory.Delete("Logs", true);

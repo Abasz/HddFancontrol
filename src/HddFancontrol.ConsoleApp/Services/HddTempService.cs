@@ -1,17 +1,10 @@
 namespace HddFancontrol.ConsoleApp.Services.Classes;
 
-public class HddTempService : IHddTempService
+public class HddTempService(ILogger<HddTempService> logger) : IHddTempService
 {
-    private readonly ILogger<HddTempService> _logger;
-
-    public HddTempService(ILogger<HddTempService> logger)
-    {
-        _logger = logger;
-    }
-
     public async Task<IEnumerable<int>> GetAllHddTempsAsync()
     {
-        _logger.LogDebug("Getting temps with hddtemp (hddtemp --numeric /dev/sd[a-z])");
+        logger.LogDebug("Getting temps with hddtemp (hddtemp --numeric /dev/sd[a-z])");
         var hddTemps = (await "hddtemp --numeric /dev/sd[a-z]".BashAsync())
             .Split("\n")
             .Select(hdd =>
@@ -28,7 +21,7 @@ public class HddTempService : IHddTempService
 
     public async Task<int?> GetHddTempAsync(string diskPath)
     {
-        _logger.LogDebug("Getting temps with hddtemp for {DiskPath}", diskPath);
+        logger.LogDebug("Getting temps with hddtemp for {DiskPath}", diskPath);
 
         var tempResponse = await $"hddtemp --numeric {diskPath}".BashAsync();
         if (tempResponse.Contains("No such file or directory"))

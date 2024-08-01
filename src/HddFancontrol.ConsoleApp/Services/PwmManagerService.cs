@@ -2,18 +2,10 @@ using System.Text.RegularExpressions;
 
 namespace HddFancontrol.ConsoleApp.Services.Classes;
 
-public class PwmManagerService : IPwmManagerService
+public class PwmManagerService(ILogger<PwmManagerService> logger, IOptionsSnapshot<GeneralSettings> generalSettings, IOptionsSnapshot<List<PwmSettings>> pwmSettings) : IPwmManagerService
 {
-    private readonly ILogger<PwmManagerService> _logger;
-    private readonly List<PwmSettings> _pwmSettings;
-    private readonly GeneralSettings _generalSettings;
-
-    public PwmManagerService(ILogger<PwmManagerService> logger, IOptionsSnapshot<GeneralSettings> generalSettings, IOptionsSnapshot<List<PwmSettings>> pwmSettings)
-    {
-        _logger = logger;
-        _pwmSettings = pwmSettings.Value;
-        _generalSettings = generalSettings.Value;
-    }
+    private readonly List<PwmSettings> _pwmSettings = pwmSettings.Value;
+    private readonly GeneralSettings _generalSettings = generalSettings.Value;
 
     public Task UpdatePwmFileAsync(int pwm, string name)
     {
@@ -39,20 +31,20 @@ public class PwmManagerService : IPwmManagerService
             index++;
             if (hddTemp < pwmSetting.MinTemp)
             {
-                _logger.LogDebug("Pwm for pwm{Index} is MinPwm ({MinPwm})", index, pwmSetting.MinPwm);
+                logger.LogDebug("Pwm for pwm{Index} is MinPwm ({MinPwm})", index, pwmSetting.MinPwm);
                 return pwmSetting.MinPwm;
             }
 
             if (hddTemp >= pwmSetting.MaxTemp)
             {
-                _logger.LogDebug("Pwm for pwm{Index} is MaxPwm ({MaxPwm})", index, pwmSetting.MaxPwm);
+                logger.LogDebug("Pwm for pwm{Index} is MaxPwm ({MaxPwm})", index, pwmSetting.MaxPwm);
                 return pwmSetting.MaxPwm;
             }
 
             var pwmStep = (pwmSetting.MaxPwm - pwmSetting.MinStart) / (pwmSetting.MaxTemp - pwmSetting.MinTemp);
             var pwm = pwmSetting.MinStart + (hddTemp - pwmSetting.MinTemp) * pwmStep;
 
-            _logger.LogDebug("Pwm for pwm{Index} is {Pwm}", index, pwm);
+            logger.LogDebug("Pwm for pwm{Index} is {Pwm}", index, pwm);
 
             return pwm;
         });

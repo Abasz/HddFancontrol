@@ -1,21 +1,10 @@
 namespace HddFancontrol.Libs.ValidationRules;
 
-public class ShouldBeLessThanAttribute : ValidationAttribute
+public class ShouldBeLessThanAttribute(string comparisonProperty) : ValidationAttribute()
 {
-    private readonly string _comparisonProperty;
-
-    public ShouldBeLessThanAttribute(string comparisonProperty) : base()
-    {
-        _comparisonProperty = comparisonProperty;
-    }
-
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        var property = validationContext.ObjectType.GetProperty(_comparisonProperty);
-
-        if (property is null)
-            throw new ArgumentException($"Property with name ${_comparisonProperty} was not found");
-
+        var property = validationContext.ObjectType.GetProperty(comparisonProperty) ?? throw new ArgumentException($"Property with name ${comparisonProperty} was not found");
         var comparisonValue = property.GetValue(validationContext.ObjectInstance);
 
         if (comparisonValue is null || value is null)
@@ -24,9 +13,8 @@ public class ShouldBeLessThanAttribute : ValidationAttribute
         if ((int)value < (int)comparisonValue)
             return ValidationResult.Success;
 
-        if (ErrorMessage is null)
-            ErrorMessage = $"Value should be less than {_comparisonProperty}";
+        ErrorMessage ??= $"Value should be less than {comparisonProperty}";
 
-        return new ValidationResult("", new List<string>() { validationContext.DisplayName });
+        return new ValidationResult("", [validationContext.DisplayName]);
     }
 }
