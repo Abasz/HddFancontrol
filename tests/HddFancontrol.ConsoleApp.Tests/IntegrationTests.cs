@@ -29,7 +29,7 @@ public class IntegrationTests
         _mockLogger = new();
 
         _hostBuilder = Program
-            .CreateHostBuilder(Array.Empty<string>())
+            .CreateHostBuilder([])
             .ConfigureAppConfiguration(
                 (hostContext, configApp) =>
                 {
@@ -67,7 +67,7 @@ public class IntegrationTests
     }
 
     [Fact]
-    public async Task AppShouldStopAndSetMaxPwmWhenGracefullShutdown()
+    public async Task AppShouldStopAndSetMaxPwmWhenGracefulShutdown()
     {
         var ct = new CancellationTokenSource(2000);
         var app = _hostBuilder.Build();

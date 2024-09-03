@@ -83,14 +83,14 @@ public class StartupTests
         await _startup.StartAsync(CancellationToken.None);
         await _startup.StopAsync(CancellationToken.None);
 
-        var i = 1;
+        var index = 1;
         Assert.All(_mockPwmSettings, setting =>
         {
             _mockPwmManager.Verify(x =>
                 x.UpdatePwmFileAsync(
                     It.Is<int>(x => x == setting.MaxPwm),
-                    It.Is<string>(x => x == $"pwm{i}")));
-            i++;
+                    It.Is<string>(x => x == $"pwm{index}")));
+            index++;
         });
     }
 

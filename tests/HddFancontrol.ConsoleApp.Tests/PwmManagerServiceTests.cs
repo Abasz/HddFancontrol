@@ -42,7 +42,7 @@ public class PwmManagerServiceTests
 
         var pwms = await pwmManagerService.GetCurrentPwmsAsync();
 
-        Assert.Equal(2, pwms.Count());
+        Assert.Equal(5, pwms.Count());
     }
 
     [Fact]

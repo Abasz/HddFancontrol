@@ -19,7 +19,7 @@ public class HddFancontrolApplicationTests
     {
         _mockHddTempService
             .Setup(x => x.GetAllHddTempsAsync())
-            .ReturnsAsync(Enumerable.Empty<int>());
+            .ReturnsAsync([]);
 
         await Assert.ThrowsAsync<InvalidOperationException>(
             () => _hddFancontrolApplication.RunAsync()

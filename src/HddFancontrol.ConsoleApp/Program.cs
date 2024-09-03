@@ -25,7 +25,7 @@ public class Program
         .UseCustomSerilog()
         .ConfigureAppConfiguration((hostContext, configApp) =>
         {
-            configApp.AddJsonFile("pwm.settings.json", optional : false, reloadOnChange : true);
+            configApp.AddJsonFile("pwm.settings.json", optional: false, reloadOnChange: true);
         })
         .ConfigureServices((hostContext, services) =>
         {

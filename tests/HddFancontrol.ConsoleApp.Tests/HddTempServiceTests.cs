@@ -20,7 +20,7 @@ public class HddTempServiceTests
     [Fact]
     public async Task ShouldReturnNullWhenTempIsNotAvailableForSpecificDrive()
     {
-        var temp = await _hddTempService.GetHddTempAsync("/dev/sdf");
+        var temp = await _hddTempService.GetHddTempAsync("/dev/sde");
 
         Assert.Null(temp);
     }
