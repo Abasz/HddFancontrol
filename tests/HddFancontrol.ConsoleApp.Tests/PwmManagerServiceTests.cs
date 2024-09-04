@@ -16,6 +16,28 @@ public class PwmManagerServiceTests
         }
     ];
 
+    private readonly List<PwmSettings> _pwmSettingsWithFanId =
+    [
+        new PwmSettings
+        {
+        FanId = 1,
+        MinTemp = 37,
+        MaxTemp = 51,
+        MinStart = 48,
+        MinPwm = 0,
+        MaxPwm = 255
+        },
+        new PwmSettings
+        {
+        FanId = 4,
+        MinTemp = 37,
+        MaxTemp = 51,
+        MinStart = 48,
+        MinPwm = 0,
+        MaxPwm = 255
+        }
+    ];
+
     public PwmManagerServiceTests()
     {
         _mockGeneralSettingsOptions = new Mock<IOptionsSnapshot<GeneralSettings>>();
@@ -67,7 +89,7 @@ public class PwmManagerServiceTests
 
         Assert.All(pwms, pwm =>
         {
-            Assert.Equal(_mockPwmSettingsOptions.Object.Value[0].MinPwm, pwm);
+            Assert.Equal(_mockPwmSettingsOptions.Object.Value[0].MinPwm, pwm.Pwm);
         });
     }
 
@@ -80,7 +102,7 @@ public class PwmManagerServiceTests
 
         Assert.All(pwms, pwm =>
         {
-            Assert.Equal(_mockPwmSettingsOptions.Object.Value[0].MinStart, pwm);
+            Assert.Equal(_mockPwmSettingsOptions.Object.Value[0].MinStart, pwm.Pwm);
         });
     }
 
@@ -93,12 +115,26 @@ public class PwmManagerServiceTests
 
         Assert.All(pwms, pwm =>
         {
-            Assert.Equal(_mockPwmSettingsOptions.Object.Value[0].MaxPwm, pwm);
+            Assert.Equal(_mockPwmSettingsOptions.Object.Value[0].MaxPwm, pwm.Pwm);
         });
     }
 
     [Fact]
     public void ShouldCalculatePwmsWhenBetweenMinMax()
+    {
+        var hddTemp = 40;
+        var pwmManagerService = new PwmManagerService(new NullLogger<PwmManagerService>(), _mockGeneralSettingsOptions.Object, _mockPwmSettingsOptions.Object);
+
+        var pwms = pwmManagerService.CalculatePwms(hddTemp);
+
+        Assert.All(pwms, (pwm, index) =>
+        {
+            Assert.Equal(_pwmSettingsWithFanId[index].FanId, pwm.Id);
+        });
+    }
+
+    [Fact]
+    public void ShouldUseFanIdWhenProvided()
     {
         var pwmSetting = _mockPwmSettingsOptions.Object.Value[0];
         var hddTemp = pwmSetting.MinTemp + (pwmSetting.MaxTemp - pwmSetting.MinTemp) / 2;
@@ -110,7 +146,7 @@ public class PwmManagerServiceTests
         {
             var pwmStep = (pwmSetting.MaxPwm - pwmSetting.MinStart) / (pwmSetting.MaxTemp - pwmSetting.MinTemp);
             var expectedPwm = pwmSetting.MinStart + (hddTemp - pwmSetting.MinTemp) * pwmStep;
-            Assert.Equal(expectedPwm, pwm);
+            Assert.Equal(expectedPwm, pwm.Pwm);
         });
     }
 }

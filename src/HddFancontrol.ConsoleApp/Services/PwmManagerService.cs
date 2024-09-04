@@ -24,21 +24,21 @@ public class PwmManagerService(ILogger<PwmManagerService> logger, IOptionsSnapsh
         return pwms.Select(pwm => int.Parse(pwm));
     }
 
-    public IEnumerable<int> CalculatePwms(int hddTemp)
+    public IEnumerable<PwmDto> CalculatePwms(int hddTemp)
     {
         var pwms = _pwmSettings.Select((pwmSetting, index) =>
         {
-            index++;
+            index = pwmSetting.FanId ?? index + 1;
             if (hddTemp < pwmSetting.MinTemp)
             {
                 logger.LogDebug("Pwm for pwm{Index} is MinPwm ({MinPwm})", index, pwmSetting.MinPwm);
-                return pwmSetting.MinPwm;
+                return new PwmDto { Pwm = pwmSetting.MinPwm, Id = index };
             }
 
             if (hddTemp >= pwmSetting.MaxTemp)
             {
                 logger.LogDebug("Pwm for pwm{Index} is MaxPwm ({MaxPwm})", index, pwmSetting.MaxPwm);
-                return pwmSetting.MaxPwm;
+                return new PwmDto { Pwm = pwmSetting.MaxPwm, Id = index };
             }
 
             var pwmStep = (pwmSetting.MaxPwm - pwmSetting.MinStart) / (pwmSetting.MaxTemp - pwmSetting.MinTemp);
@@ -46,7 +46,7 @@ public class PwmManagerService(ILogger<PwmManagerService> logger, IOptionsSnapsh
 
             logger.LogDebug("Pwm for pwm{Index} is {Pwm}", index, pwm);
 
-            return pwm;
+            return new PwmDto { Pwm = pwm, Id = index };
         });
 
         return pwms;

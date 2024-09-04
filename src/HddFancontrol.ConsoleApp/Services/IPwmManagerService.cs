@@ -4,5 +4,5 @@ public interface IPwmManagerService
 {
     Task UpdatePwmFileAsync(int pwm, string name);
     Task<IEnumerable<int>> GetCurrentPwmsAsync();
-    IEnumerable<int> CalculatePwms(int hddTemp);
+    IEnumerable<PwmDto> CalculatePwms(int hddTemp);
 }

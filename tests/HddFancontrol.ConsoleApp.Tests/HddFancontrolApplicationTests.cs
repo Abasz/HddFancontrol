@@ -46,7 +46,7 @@ public class HddFancontrolApplicationTests
         _mockHddTempService
             .Setup(x => x.GetAllHddTempsAsync())
             .ReturnsAsync(temps);
-        _mockPwmManager.Setup(x => x.CalculatePwms(It.IsAny<int>())).Returns(temps.Select(temp => temp + 10));
+        _mockPwmManager.Setup(x => x.CalculatePwms(It.IsAny<int>())).Returns(temps.Select((temp, index) => new PwmDto { Pwm = temp + 10, Id = index }));
 
         await _hddFancontrolApplication.RunAsync();
 

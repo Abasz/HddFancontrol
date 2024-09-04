@@ -80,7 +80,7 @@ public class PwmSettingsModelTests
     }
 
     [Fact]
-    public void ShouldBeValid()
+    public void ShouldBeValidWithoutFanId()
     {
         var validationErrors = new List<ValidationResult>();
         var sut = new PwmSettings
@@ -95,5 +95,24 @@ public class PwmSettingsModelTests
         var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
 
         Assert.True(isValid);
+    }
+
+    [Fact]
+    public void ShouldNotHaveInvalidFanId()
+    {
+        var validationErrors = new List<ValidationResult>();
+        var sut = new PwmSettings
+        {
+            FanId = -1,
+            MinTemp = 1,
+            MaxTemp = 10,
+            MaxPwm = 255,
+            MinPwm = 2,
+            MinStart = 10,
+        };
+
+        var isValid = Validator.TryValidateObject(sut, new ValidationContext(sut), validationErrors, true);
+
+        Assert.False(isValid);
     }
 }

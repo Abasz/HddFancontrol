@@ -64,7 +64,7 @@ public class Startup(ILogger<Startup> logger, IServiceProvider services, IHostAp
 
         await Task.WhenAll(
             pwmSettings.CurrentValue.Select(
-                (pwm, index) => pwmManagerService.UpdatePwmFileAsync(pwm.MaxPwm, $"pwm{index + 1}")
+                (pwm, index) => pwmManagerService.UpdatePwmFileAsync(pwm.MaxPwm, $"pwm{pwm.FanId ?? index + 1}")
             )
         );
     }

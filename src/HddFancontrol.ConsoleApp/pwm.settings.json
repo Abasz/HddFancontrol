@@ -5,6 +5,7 @@
     },
     "pwmSettings": [
         {
+            "fanId": 1,
             "minTemp": 29,
             "maxTemp": 43,
             "minStart": 48,
@@ -12,6 +13,7 @@
             "maxPwm": 255
         },
         {
+            "fanId": 3,
             "minTemp": 29,
             "maxTemp": 43,
             "minStart": 30,

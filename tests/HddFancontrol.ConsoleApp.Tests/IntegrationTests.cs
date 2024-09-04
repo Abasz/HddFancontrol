@@ -10,6 +10,7 @@ public class IntegrationTests
         [
             new KeyValuePair<string, string>("generalSettings:Interval", "11"),
             new KeyValuePair<string, string>("generalSettings:DevPath", "./"),
+            new KeyValuePair<string, string>("pwmSettings:0:FanId", "10"),
             new KeyValuePair<string, string>("pwmSettings:0:MinTemp", "29"),
             new KeyValuePair<string, string>("pwmSettings:0:MaxTemp", "43"),
             new KeyValuePair<string, string>("pwmSettings:0:MinStart", "48"),

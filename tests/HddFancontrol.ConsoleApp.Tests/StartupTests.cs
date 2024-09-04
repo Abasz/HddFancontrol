@@ -15,7 +15,33 @@ public class StartupTests
 
     public StartupTests()
     {
-        _mockPwmSettings = [new PwmSettings(), new PwmSettings()];
+        _mockPwmSettings = [
+            new PwmSettings
+            {
+                FanId = 1,
+                MinTemp = 37,
+                MaxTemp = 51,
+                MinStart = 48,
+                MinPwm = 0,
+                MaxPwm = 255
+            },
+            new PwmSettings
+            {
+                FanId = 4,
+                MinTemp = 37,
+                MaxTemp = 51,
+                MinStart = 48,
+                MinPwm = 0,
+                MaxPwm = 255
+            },
+            new PwmSettings
+            {
+                MinTemp = 37,
+                MaxTemp = 51,
+                MinStart = 48,
+                MinPwm = 0,
+                MaxPwm = 255
+            }];
         _mockGeneralSettings = new()
         {
             DevPath = "./",
@@ -89,7 +115,7 @@ public class StartupTests
             _mockPwmManager.Verify(x =>
                 x.UpdatePwmFileAsync(
                     It.Is<int>(x => x == setting.MaxPwm),
-                    It.Is<string>(x => x == $"pwm{index}")));
+                    It.Is<string>(x => x == $"pwm{setting.FanId ?? index}")));
             index++;
         });
     }

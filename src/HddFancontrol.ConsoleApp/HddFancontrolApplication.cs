@@ -11,10 +11,9 @@ public class HddFancontrolApplication(ILogger<HddFancontrolApplication> logger, 
         if (!hddTemps.Any())
             throw new InvalidOperationException("There are no HDD temps available");
 
-        // should decide wether getting current pwm and if equals to the to be set, no update is performed.
         await Task.WhenAll(
             pwmManagerService.CalculatePwms(hddTemps.ElementAt(0))
-            .Select((pwm, index) => pwmManagerService.UpdatePwmFileAsync(pwm, $"pwm{index + 1}"))
+            .Select((pwm, index) => pwmManagerService.UpdatePwmFileAsync(pwm.Pwm, $"pwm{pwm.Id}"))
         );
     }
 }

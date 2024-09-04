@@ -14,6 +14,9 @@ public class GeneralSettings
 
 public class PwmSettings
 {
+    [Range(0, int.MaxValue, ErrorMessage = "Should to be greater than 0")]
+    public int? FanId { get; set; }
+
     [Range(0, int.MaxValue, ErrorMessage = "Required to be greater than 0")]
     [ShouldBeLessThan(nameof(MaxTemp))]
     public int MinTemp { get; set; } = -1;
@@ -34,4 +37,10 @@ public class PwmSettings
     [Range(0, 255, ErrorMessage = "Required to be between 0 and 255")]
     [ShouldBeGreaterThan(nameof(MinPwm))]
     public int MaxPwm { get; set; } = -1;
+}
+
+public class PwmDto
+{
+    public int Pwm { get; set; } = 0;
+    public int Id { get; set; } = 0;
 }
