@@ -1,7 +1,7 @@
 {
     "generalSettings": {
         "interval": 10,
-        "devPath": "./bin/Debug/net8.0/"
+        "devPath": "./bin/Debug/net8.0/",
     },
     "pwmSettings": [
         {

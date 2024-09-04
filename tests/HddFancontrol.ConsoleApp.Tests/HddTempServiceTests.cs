@@ -1,6 +1,6 @@
 namespace HddFancontrol.ConsoleApp.Tests;
 
-public class HddTempServiceTests
+public partial class HddTempServiceTests
 {
     private readonly HddTempService _hddTempService;
 
