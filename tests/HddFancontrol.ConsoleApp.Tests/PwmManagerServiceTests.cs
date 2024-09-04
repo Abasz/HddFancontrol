@@ -149,4 +149,18 @@ public class PwmManagerServiceTests
             Assert.Equal(expectedPwm, pwm.Pwm);
         });
     }
+
+    [Fact]
+    public async Task ShouldSetPwmMode()
+    {
+        var pwmControllerProfile = PwmControllerProfiles.Custom;
+        var pwmManagerService = new PwmManagerService(new NullLogger<PwmManagerService>(), _mockGeneralSettingsOptions.Object, _mockPwmSettingsOptions.Object);
+
+        await pwmManagerService.SetPwmControllerProfile("pwm1", pwmControllerProfile);
+
+        var testPwm = await File.ReadAllTextAsync("pwm1_enable");
+        File.Delete("pwm1_enable");
+
+        Assert.Equal(((int)PwmControllerProfiles.Custom).ToString(), testPwm.Trim());
+    }
 }

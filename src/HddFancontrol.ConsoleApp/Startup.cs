@@ -5,13 +5,25 @@ public class Startup(ILogger<Startup> logger, IServiceProvider services, IHostAp
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Starting HDD Fancontrol service");
+
+        using var scope = services.CreateScope();
+
+        var pwmManagerService = scope.ServiceProvider.GetRequiredService<IPwmManagerService>();
+
+        await Task.WhenAll(
+        pwmSettings.CurrentValue.Select((settings, index) =>
+            {
+                var id = settings.FanId ?? index + 1;
+                logger.LogDebug("Set Pwm mode to {PwmMode} for Fan Id {FanId}", PwmControllerProfiles.Custom, id);
+                return pwmManagerService.SetPwmControllerProfile($"pwm{id}", PwmControllerProfiles.Custom);
+            })
+        );
         try
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 logger.LogDebug("Starting check run");
 
-                using var scope = services.CreateScope();
 
                 await scope.ServiceProvider
                     .GetRequiredService<IHddFancontrolApplication>()

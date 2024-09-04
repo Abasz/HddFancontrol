@@ -7,6 +7,13 @@ public class PwmManagerService(ILogger<PwmManagerService> logger, IOptionsSnapsh
     private readonly List<PwmSettings> _pwmSettings = pwmSettings.Value;
     private readonly GeneralSettings _generalSettings = generalSettings.Value;
 
+
+    public Task SetPwmControllerProfile(string name, PwmControllerProfiles profile)
+    {
+        return $"echo {(int)profile} > {Path.Combine(_generalSettings.DevPath, name)}_enable"
+    .BashAsync();
+    }
+
     public Task UpdatePwmFileAsync(int pwm, string name)
     {
         return $"echo {pwm} > {Path.Combine(_generalSettings.DevPath, name)}"

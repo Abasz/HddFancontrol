@@ -103,6 +103,24 @@ public class StartupTests
             ), Times.Once);
     }
 
+    [Fact(DisplayName = "Should set Pwm mode when application starts")]
+    public async Task ShouldSetPwmModeOnStartup()
+    {
+        await _startup.StartAsync(CancellationToken.None);
+        await _startup.StopAsync(CancellationToken.None);
+
+        var index = 1;
+        Assert.All(_mockPwmSettings, setting =>
+        {
+            _mockPwmManager.Verify(x =>
+                x.SetPwmControllerProfile(
+                    It.Is<string>(x => x == $"pwm{setting.FanId ?? index}"),
+                    PwmControllerProfiles.Custom
+                    ));
+            index++;
+        });
+    }
+
     [Fact(DisplayName = "Should set max pwm when application exits")]
     public async Task ShouldSetMaxPwmOnExit()
     {

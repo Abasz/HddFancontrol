@@ -44,3 +44,12 @@ public class PwmDto
     public int Pwm { get; set; } = 0;
     public int Id { get; set; } = 0;
 }
+
+public enum PwmControllerProfiles
+{
+    FullSpeed,
+    Custom,
+    Silent,
+    Standard,
+    Performance = 5,
+}
