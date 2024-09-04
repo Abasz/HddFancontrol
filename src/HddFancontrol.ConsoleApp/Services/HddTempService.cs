@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace HddFancontrol.ConsoleApp.Services.Classes;
 
-public partial class HddTempService(ILogger<HddTempService> logger) : IHddTempService
+public partial class HddTempService(ILogger<HddTempService> logger, IOptionsMonitor<GeneralSettings> generalSettings) : IHddTempService
 {
     public async Task<IEnumerable<int>> GetAllHddTempsAsync()
     {
@@ -11,6 +11,7 @@ public partial class HddTempService(ILogger<HddTempService> logger) : IHddTempSe
         var hddTemps = (await Task.WhenAll((await "lsblk -d -o NAME -n".BashAsync())
             .Trim()
             .Split(Environment.NewLine)
+            .Where(disk => generalSettings.CurrentValue.ExcludePatter is not null ? !new Regex(generalSettings.CurrentValue.ExcludePatter).IsMatch(disk) : true)
             .Select(async disk =>
             {
                 var match = tempRegex().Match(await $"smartctl -a /dev/{disk} | grep Temperature".BashAsync());

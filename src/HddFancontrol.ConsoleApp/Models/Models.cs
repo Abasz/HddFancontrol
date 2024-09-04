@@ -4,6 +4,8 @@ namespace HddFancontrol.ConsoleApp.Models;
 
 public class GeneralSettings
 {
+    public string? ExcludePatter { get; set; }
+
     [Range(1, int.MaxValue, ErrorMessage = "Required to be greater than 0")]
     public int Interval { get; set; } = 0;
 

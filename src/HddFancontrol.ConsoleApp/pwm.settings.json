@@ -2,6 +2,7 @@
     "generalSettings": {
         "interval": 10,
         "devPath": "./bin/Debug/net8.0/",
+        "ExcludePatter": "nvme.*|sde"
     },
     "pwmSettings": [
         {
